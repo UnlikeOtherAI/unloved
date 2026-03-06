@@ -21,14 +21,14 @@ export default function ViewportSwitch() {
   const setPreviewViewport = useLayoutStore((s) => s.setPreviewViewport)
 
   return (
-    <div className="flex h-8 items-center rounded-lg border border-divider bg-sidebar dark:border-divider-dark dark:bg-bg-dark">
+    <div className="flex h-8 items-center overflow-hidden rounded-lg border border-divider bg-sidebar dark:border-divider-dark dark:bg-bg-dark">
       {viewports.map(({ value, icon: Icon, label, rotate }) => (
         <button
           key={value}
           type="button"
           onClick={() => setPreviewViewport(value)}
           className={[
-            'group relative flex h-full cursor-pointer items-center gap-1.5 px-2 text-xs transition-colors first:rounded-l-lg last:rounded-r-lg',
+            'relative flex h-full cursor-pointer items-center gap-1.5 px-2 text-xs transition-colors',
             previewViewport === value
               ? 'bg-accent text-white'
               : 'text-text-secondary hover:bg-sidebar-hover dark:hover:bg-divider-dark',

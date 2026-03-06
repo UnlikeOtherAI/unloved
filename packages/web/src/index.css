@@ -57,6 +57,14 @@
   color-scheme: light dark;
 }
 
+html {
+  background: var(--color-bg);
+}
+
+html:where(.dark) {
+  background: var(--color-bg-dark);
+}
+
 body {
   margin: 0;
   font-family: var(--font-sans);

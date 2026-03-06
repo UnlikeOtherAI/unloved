@@ -8,7 +8,7 @@ export default function CockpitLayout() {
   const closeSidebar = useLayoutStore((s) => s.closeSidebar)
 
   return (
-    <div className="flex h-dvh w-dvw overflow-hidden bg-bg dark:bg-bg-dark">
+    <div className="flex h-dvh w-dvw overflow-hidden bg-bg pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] dark:bg-bg-dark">
       {/* Desktop: animated inline sidebar */}
       <div
         className="hidden shrink-0 overflow-hidden transition-[width] duration-300 ease-in-out md:block"

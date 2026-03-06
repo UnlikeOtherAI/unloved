@@ -14,14 +14,14 @@ export default function ViewModeSwitch() {
   const setViewMode = useLayoutStore((s) => s.setViewMode)
 
   return (
-    <div className="flex h-8 items-center rounded-lg border border-divider bg-sidebar dark:border-divider-dark dark:bg-bg-dark">
+    <div className="flex h-8 items-center overflow-hidden rounded-lg border border-divider bg-sidebar dark:border-divider-dark dark:bg-bg-dark">
       {modes.map(({ value, icon: Icon, label, splitOnly }) => (
         <button
           key={value}
           type="button"
           onClick={() => setViewMode(value)}
           className={[
-            'group relative flex h-full cursor-pointer items-center gap-1.5 px-2.5 text-xs transition-colors first:rounded-l-lg last:rounded-r-lg',
+            'relative flex h-full cursor-pointer items-center gap-1.5 px-2.5 text-xs transition-colors',
             splitOnly ? 'hidden md:flex' : '',
             viewMode === value
               ? 'bg-accent text-white'

@@ -1,8 +1,14 @@
 import { create } from 'zustand'
 import type { AppConfig, ThemeMode } from '@unloved/shared'
 
+const THEME_COLORS = { dark: '#0B0F19', light: '#F6F7F9' } as const
+
 const applyThemeClass = (mode: ThemeMode) => {
   document.documentElement.classList.toggle('dark', mode === 'dark')
+  const color = THEME_COLORS[mode]
+  document.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]').forEach((el) => {
+    el.content = color
+  })
 }
 
 export interface ThemeStore {
