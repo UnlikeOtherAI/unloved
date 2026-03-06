@@ -1,0 +1,11 @@
+{
+  "name": "unloved-monorepo",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm -r --parallel dev",
+    "build": "pnpm -r build"
+  },
+  "devDependencies": {
+    "typescript": "^5.7"
+  }
+}
