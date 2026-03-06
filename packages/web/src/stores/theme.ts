@@ -1,6 +1,10 @@
 import { create } from 'zustand'
 import type { AppConfig, ThemeMode } from '@unloved/shared'
 
+const applyThemeClass = (mode: ThemeMode) => {
+  document.documentElement.classList.toggle('dark', mode === 'dark')
+}
+
 export interface ThemeStore {
   mode: ThemeMode
   setMode: (mode: ThemeMode) => void
@@ -12,7 +16,7 @@ export const useThemeStore = create<ThemeStore>((set, get) => ({
   mode: 'light',
   setMode: (mode) => {
     set({ mode })
-    document.documentElement.classList.toggle('dark', mode === 'dark')
+    applyThemeClass(mode)
     void fetch('/api/config', {
       method: 'PATCH',
       headers: {
@@ -28,6 +32,7 @@ export const useThemeStore = create<ThemeStore>((set, get) => ({
   hydrate: async () => {
     const response = await fetch('/api/config')
     const config: AppConfig = await response.json()
-    get().setMode(config.theme)
+    set({ mode: config.theme })
+    applyThemeClass(config.theme)
   },
 }))
