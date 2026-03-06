@@ -19,7 +19,7 @@ make install
 make dev
 ```
 
-This starts both the server (http://localhost:7331) and the web UI (http://localhost:5173).
+This starts both the server (http://localhost:6200) and the web UI (http://localhost:6201).
 
 ## Project Structure
 
@@ -55,10 +55,10 @@ make reset          Clean + reinstall from scratch
 
 | Service | Port | URL |
 |---------|------|-----|
-| Server  | 7331 | http://localhost:7331 |
-| Web     | 5173 | http://localhost:5173 |
+| Server  | 6200 | http://localhost:6200 |
+| Web     | 6201 | http://localhost:6201 |
 
-The Vite dev server proxies `/api` requests to the server, so you only need to open http://localhost:5173.
+The Vite dev server proxies `/api` requests to the server, so you only need to open http://localhost:6201.
 
 ### Package Dependencies
 

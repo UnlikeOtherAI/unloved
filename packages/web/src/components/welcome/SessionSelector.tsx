@@ -1,21 +1,26 @@
-import { Select } from '../ui'
+import { Button, Select } from '../ui'
 import { useSessionStore } from '../../stores/session'
 
 export default function SessionSelector() {
-  const existingSessions = useSessionStore((state) => state.existingSessions)
-  const selectedSession = useSessionStore((state) => state.selectedSession)
-  const setSelectedSession = useSessionStore((state) => state.setSelectedSession)
+  const existingSessions = useSessionStore((s) => s.existingSessions)
+  const selectedSession = useSessionStore((s) => s.selectedSession)
+  const setSelectedSession = useSessionStore((s) => s.setSelectedSession)
 
   if (existingSessions.length === 0) {
-    return <p className="text-sm text-text-secondary">No tmux sessions found</p>
+    return <p className="text-center text-sm text-text-secondary">No tmux sessions running</p>
   }
 
   return (
-    <Select
-      options={existingSessions.map((session) => ({ value: session.name, label: session.name }))}
-      value={selectedSession}
-      onChange={setSelectedSession}
-      placeholder="Select existing session"
-    />
+    <div className="flex flex-col gap-3">
+      <Select
+        options={existingSessions.map((s) => ({ value: s.name, label: s.name }))}
+        value={selectedSession}
+        onChange={setSelectedSession}
+        placeholder="Select a session..."
+      />
+      <Button variant="secondary" className="w-full" disabled={!selectedSession}>
+        Attach to session
+      </Button>
+    </div>
   )
 }

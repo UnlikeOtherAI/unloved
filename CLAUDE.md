@@ -28,5 +28,5 @@ Implementation specs live in `specs/`. Each steroids task references its spec fi
 
 ## Ports
 
-- Server: 7331
-- Web dev: 5173
+- Server: 6200
+- Web dev: 6201

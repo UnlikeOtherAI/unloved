@@ -1,11 +1,11 @@
 import { readFile, writeFile } from 'node:fs/promises'
-import { join } from 'node:path'
+import { resolve } from 'node:path'
 import { Router, type Router as ExpressRouter } from 'express'
 import { DEFAULT_CONFIG, type AppConfig } from '@unloved/shared'
 import { z } from 'zod'
 
 const configRouter: ExpressRouter = Router()
-const configPath = join(process.cwd(), 'unloved.config.json')
+const configPath = resolve(process.env.UNLOVED_ROOT ?? process.cwd(), 'unloved.config.json')
 
 const patchSchema = z.object({
   theme: z.enum(['light', 'dark']).optional(),

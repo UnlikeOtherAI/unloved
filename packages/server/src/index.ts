@@ -2,7 +2,7 @@ import { fileURLToPath } from 'node:url'
 import type { Server } from 'node:http'
 import app from './app'
 
-const DEFAULT_PORT = 7331
+const DEFAULT_PORT = 6200
 
 export const createServer = (port = DEFAULT_PORT): Server => {
   const server = app.listen(port, () => {

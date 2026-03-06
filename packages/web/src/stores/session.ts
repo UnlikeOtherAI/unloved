@@ -1,23 +1,25 @@
 import { create } from 'zustand'
 import type { TmuxSession } from '@unloved/shared'
 
+export type SessionMode = 'tmux' | 'quick'
+
 export interface SessionStore {
-  useTmux: boolean
+  mode: SessionMode
   sessionName: string
   existingSessions: TmuxSession[]
   selectedSession: string | null
-  setUseTmux: (v: boolean) => void
+  setMode: (mode: SessionMode) => void
   setSessionName: (v: string) => void
   setSelectedSession: (v: string | null) => void
   fetchSessions: () => Promise<void>
 }
 
 export const useSessionStore = create<SessionStore>((set) => ({
-  useTmux: true,
+  mode: 'tmux',
   sessionName: '',
   existingSessions: [],
   selectedSession: null,
-  setUseTmux: (useTmux) => set({ useTmux }),
+  setMode: (mode) => set({ mode, selectedSession: null }),
   setSessionName: (sessionName) => set({ sessionName }),
   setSelectedSession: (selectedSession) => set({ selectedSession }),
   fetchSessions: async () => {
