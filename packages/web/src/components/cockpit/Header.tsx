@@ -1,21 +1,22 @@
-import { useRef } from 'react'
-import { Menu, RotateCw, Hammer, X } from 'lucide-react'
+import { Menu, RotateCw, Hammer } from 'lucide-react'
 import { useSessionStore } from '../../stores/session'
 import { useLayoutStore } from '../../stores/layout'
+import ViewModeSwitch from './ViewModeSwitch'
+import ViewportSwitch from './ViewportSwitch'
+import SessionMenu from './SessionMenu'
 
 export default function Header() {
   const activeSessionName = useSessionStore((s) => s.activeSessionName)
   const sessionMetas = useSessionStore((s) => s.sessionMetas)
   const triggerRestart = useSessionStore((s) => s.triggerRestart)
-  const clearActiveSession = useSessionStore((s) => s.clearActiveSession)
   const toggleSidebar = useLayoutStore((s) => s.toggleSidebar)
-  const iframeRef = useRef<HTMLIFrameElement | null>(null)
+  const viewMode = useLayoutStore((s) => s.viewMode)
 
   const meta = activeSessionName ? sessionMetas[activeSessionName] : null
   const previewUrl = meta?.previewUrl
+  const showPreview = viewMode !== 'terminal'
 
   const handleRefresh = () => {
-    // Find the preview iframe in the DOM and reload it
     const iframe = document.querySelector('iframe[title="Preview"]') as HTMLIFrameElement | null
     if (!iframe) return
     const current = iframe.src
@@ -60,6 +61,12 @@ export default function Header() {
 
           <div className="flex-1" />
 
+          <ViewModeSwitch />
+
+          <div className="flex-1" />
+
+          {showPreview && <ViewportSwitch />}
+
           {meta?.restartCommand && (
             <button
               type="button"
@@ -72,15 +79,7 @@ export default function Header() {
             </button>
           )}
 
-          <button
-            type="button"
-            onClick={clearActiveSession}
-            className="flex h-8 shrink-0 cursor-pointer items-center gap-1.5 rounded-sidebar px-2.5 text-xs text-text-secondary transition-colors hover:bg-sidebar-hover dark:hover:bg-divider-dark"
-            aria-label="Disconnect"
-          >
-            <X size={14} />
-            Disconnect
-          </button>
+          <SessionMenu />
         </>
       ) : (
         <span className="text-sm text-text-secondary">Select a session</span>

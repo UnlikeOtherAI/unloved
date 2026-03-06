@@ -10,9 +10,11 @@ export default function TerminalPanel({ sessionName }: Props) {
   useTerminal(sessionName, containerRef)
 
   return (
-    <div
-      ref={containerRef}
-      className="h-full w-full bg-terminal-bg"
-    />
+    <div className="flex h-full min-h-0 w-full flex-1 flex-col bg-terminal-bg p-3">
+      <div
+        ref={containerRef}
+        className="min-h-0 flex-1"
+      />
+    </div>
   )
 }

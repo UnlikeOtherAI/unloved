@@ -5,5 +5,5 @@ export interface AppConfig {
 }
 
 export const DEFAULT_CONFIG: AppConfig = {
-  theme: 'light',
+  theme: 'dark',
 }

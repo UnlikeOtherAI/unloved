@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useSessionStore } from '../../stores/session'
+import { useLayoutStore } from '../../stores/layout'
 import { Button, Input } from '../ui'
 
 interface Props {
@@ -10,6 +11,7 @@ export default function CreateSessionDialog({ onClose }: Props) {
   const [name, setName] = useState('')
   const createSession = useSessionStore((s) => s.createSession)
   const error = useSessionStore((s) => s.error)
+  const closeSidebar = useLayoutStore((s) => s.closeSidebar)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -18,6 +20,7 @@ export default function CreateSessionDialog({ onClose }: Props) {
     await createSession(trimmed)
     if (!useSessionStore.getState().error) {
       onClose()
+      closeSidebar()
     }
   }
 

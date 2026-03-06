@@ -1,10 +1,12 @@
 import { useSessionStore } from '../../stores/session'
+import { useLayoutStore } from '../../stores/layout'
 import SessionItem from './SessionItem'
 
 export default function SessionList() {
   const sessions = useSessionStore((s) => s.sessions)
   const activeSessionName = useSessionStore((s) => s.activeSessionName)
   const setActiveSession = useSessionStore((s) => s.setActiveSession)
+  const closeSidebar = useLayoutStore((s) => s.closeSidebar)
 
   if (sessions.length === 0) {
     return (
@@ -22,7 +24,7 @@ export default function SessionList() {
           name={s.name}
           attached={s.attached}
           active={s.name === activeSessionName}
-          onClick={() => setActiveSession(s.name)}
+          onClick={() => { setActiveSession(s.name); closeSidebar() }}
         />
       ))}
     </div>

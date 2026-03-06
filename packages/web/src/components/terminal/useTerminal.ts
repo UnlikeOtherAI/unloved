@@ -38,6 +38,9 @@ export function useTerminal(
 
     term.open(el)
     fit.fit()
+    term.focus()
+
+    el.addEventListener('click', () => term.focus())
 
     termRef.current = term
     fitRef.current = fit
@@ -52,8 +55,15 @@ export function useTerminal(
     })
 
     // Bridge: terminal → store (keystrokes)
+    // Filter out DA responses and cursor position reports that xterm.js
+    // generates in reply to tmux queries — these leak as garbled text if
+    // forwarded back through the pty to other attached tmux clients.
+    const TERM_RESPONSE_RE = /\x1b\[[\x3c-\x3f]?[\d;]*[cRn]|\x1bP[^\x1b]*\x1b\\/g
     const dataDisposable = term.onData((data) => {
-      useTerminalStore.getState().send(data)
+      const filtered = data.replace(TERM_RESPONSE_RE, '')
+      if (filtered) {
+        useTerminalStore.getState().send(filtered)
+      }
     })
 
     // Connect WebSocket

@@ -8,7 +8,7 @@ export default function Sidebar() {
   const [creating, setCreating] = useState(false)
 
   return (
-    <aside className="flex h-full w-[var(--sidebar-width)] shrink-0 flex-col border-r border-divider bg-sidebar dark:border-divider-dark dark:bg-card-dark">
+    <aside className="flex h-full min-w-[var(--sidebar-width)] flex-col border-r border-divider bg-sidebar dark:border-divider-dark dark:bg-card-dark">
       <div className="flex items-center gap-2.5 px-5 py-4">
         <img src="/logo.png" alt="unloved" className="h-7 w-7" />
         <span className="text-sm font-semibold text-text-primary dark:text-text-dark">unloved</span>

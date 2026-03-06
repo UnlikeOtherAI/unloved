@@ -12,6 +12,7 @@ export interface SessionStore {
   clearActiveSession: () => void
   createSession: (name: string) => Promise<void>
   fetchMeta: (name: string) => Promise<void>
+  killSession: (name: string) => Promise<void>
   triggerRestart: (name: string) => Promise<void>
   startPolling: () => () => void
 }
@@ -72,6 +73,16 @@ export const useSessionStore = create<SessionStore>((set, get) => ({
       set((s) => ({ sessionMetas: { ...s.sessionMetas, [name]: meta } }))
     } catch {
       // Ignore
+    }
+  },
+
+  killSession: async (name) => {
+    try {
+      await fetch(`/api/tmux/sessions/${encodeURIComponent(name)}`, { method: 'DELETE' })
+      set({ activeSessionName: null })
+      await get().fetchSessions()
+    } catch {
+      // Best effort
     }
   },
 

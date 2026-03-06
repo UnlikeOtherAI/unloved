@@ -1,3 +1,4 @@
+import { existsSync } from 'node:fs'
 import { createConnection } from 'node:net'
 import { resolve, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -28,6 +29,11 @@ export async function startCommand(args: ParsedArgs): Promise<void> {
     process.exit(1)
   }
   const sessionName = args.positional[0] ?? (await detectTmuxSession()) ?? undefined
+  const homeDir = await ensureHome()
+
+  if (!args.flags['no-sync']) {
+    syncRepo(homeDir)
+  }
 
   if (await isPortInUse(port)) {
     console.log(`unloved is already running at http://localhost:${port}`)
@@ -37,18 +43,10 @@ export async function startCommand(args: ParsedArgs): Promise<void> {
     process.exit(0)
   }
 
-  const homeDir = await ensureHome()
-
   const __dirname = dirname(fileURLToPath(import.meta.url))
   const bundledDir = resolve(__dirname, '..', 'public')
-
-  let staticDir = bundledDir
-  if (!args.flags['no-sync']) {
-    const syncedDir = syncRepo(homeDir)
-    if (syncedDir) {
-      staticDir = syncedDir
-    }
-  }
+  const syncedDir = resolve(homeDir, 'repo', 'packages', 'web', 'dist')
+  const staticDir = !args.flags['no-sync'] && existsSync(syncedDir) ? syncedDir : bundledDir
 
   startServer({ homeDir, staticDir, port })
 

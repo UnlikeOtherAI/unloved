@@ -13,7 +13,7 @@ export interface ThemeStore {
 }
 
 export const useThemeStore = create<ThemeStore>((set, get) => ({
-  mode: 'light',
+  mode: 'dark',
   setMode: (mode) => {
     set({ mode })
     applyThemeClass(mode)

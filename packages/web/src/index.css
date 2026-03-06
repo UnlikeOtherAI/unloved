@@ -61,3 +61,8 @@ body {
   margin: 0;
   font-family: var(--font-sans);
 }
+
+/* Remove focus outline on resizable panel separators */
+[data-panel-group-id] > [role="separator"] {
+  outline: none;
+}

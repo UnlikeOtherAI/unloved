@@ -64,4 +64,25 @@ tmuxRouter.post('/sessions', async (request, response) => {
   }
 })
 
+tmuxRouter.delete('/sessions/:name', async (request, response) => {
+  const { name } = request.params
+
+  if (!name || !name.trim()) {
+    response.status(400).json({ error: 'Session name is required' })
+    return
+  }
+
+  try {
+    await execFileAsync('tmux', ['kill-session', '-t', name.trim()])
+    response.json({ name: name.trim(), killed: true })
+  } catch (error) {
+    const tmuxError = error as NodeJS.ErrnoException
+    if (tmuxError.code === 'ENOENT') {
+      response.status(400).json({ error: 'tmux is not installed' })
+      return
+    }
+    response.status(500).json({ error: 'Failed to kill tmux session' })
+  }
+})
+
 export default tmuxRouter
