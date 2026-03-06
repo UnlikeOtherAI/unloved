@@ -1,0 +1,61 @@
+@import "tailwindcss";
+@import "@fontsource/inter/latin.css";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-bg: #F6F7F9;
+  --color-bg-dark: #0B0F19;
+  --color-sidebar: #F3F4F6;
+  --color-sidebar-hover: #E9EBF0;
+  --color-sidebar-active: #FFFFFF;
+  --color-card: #FFFFFF;
+  --color-card-dark: #111827;
+  --color-divider: #E6E8EC;
+  --color-divider-dark: #1F2937;
+  --color-accent: #5B6BFF;
+  --color-accent-hover: #4C59E8;
+  --color-accent-dark: #6D7DFF;
+  --color-accent-ring: rgba(91,107,255,0.2);
+  --color-text-primary: #0F172A;
+  --color-text-secondary: #6B7280;
+  --color-text-dark: #E5E7EB;
+  --color-terminal-bg: #0D1117;
+  --color-terminal-text: #E6EDF3;
+  --color-preview-toolbar: #F8FAFC;
+
+  --radius-card: 20px;
+  --radius-button: 12px;
+  --radius-input: 14px;
+  --radius-modal: 24px;
+  --radius-sidebar: 10px;
+  --radius-preview: 8px;
+  --radius-console-input: 16px;
+
+  --shadow-card: 0 8px 24px rgba(0,0,0,0.08);
+  --shadow-hover: 0 12px 32px rgba(0,0,0,0.12);
+  --shadow-float: 0 10px 40px rgba(0,0,0,0.12);
+  --shadow-subtle: 0 2px 8px rgba(0,0,0,0.05);
+
+  --font-sans: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --sidebar-width: 260px;
+  --header-height: 64px;
+  --console-width: 420px;
+  --preview-min-width: 600px;
+
+  --color-gradient-top: #E7EAF3;
+  --color-gradient-mid: #5A7CFF;
+  --color-gradient-pink: #FF4DA3;
+  --color-gradient-red: #FF4D4D;
+}
+
+:root {
+  color-scheme: light dark;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+}
