@@ -31,6 +31,9 @@ export async function startCommand(args: ParsedArgs): Promise<void> {
 
   if (await isPortInUse(port)) {
     console.log(`unloved is already running at http://localhost:${port}`)
+    if (!args.flags['no-open']) {
+      openBrowser(`http://localhost:${port}`)
+    }
     process.exit(0)
   }
 

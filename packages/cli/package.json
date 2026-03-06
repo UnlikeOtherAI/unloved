@@ -1,10 +1,10 @@
 {
   "name": "@unlikeotherai/unloved",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Local multi-device AI coding cockpit",
   "type": "module",
   "bin": {
-    "unloved": "./dist/index.js"
+    "unloved": "dist/index.js"
   },
   "files": [
     "dist",
