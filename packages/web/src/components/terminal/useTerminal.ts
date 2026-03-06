@@ -66,8 +66,9 @@ export function useTerminal(
       }
     })
 
-    // Connect WebSocket
-    useTerminalStore.getState().connect(sessionName)
+    // Connect WebSocket with initial terminal dimensions
+    const { cols, rows } = term
+    useTerminalStore.getState().connect(sessionName, cols, rows)
 
     // Resize handling
     const resizeObs = new ResizeObserver(() => {

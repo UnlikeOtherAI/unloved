@@ -7,7 +7,7 @@ export interface TerminalStore {
   connectedSession: string | null
   onMessage: MessageHandler | null
 
-  connect: (sessionName: string) => void
+  connect: (sessionName: string, cols?: number, rows?: number) => void
   disconnect: () => void
   send: (data: string | ArrayBuffer) => void
   resize: (cols: number, rows: number) => void
@@ -21,7 +21,7 @@ export const useTerminalStore = create<TerminalStore>((set, get) => ({
   connectedSession: null,
   onMessage: null,
 
-  connect: (sessionName) => {
+  connect: (sessionName, cols?: number, rows?: number) => {
     // Disconnect existing
     if (ws) {
       ws.close()
@@ -29,7 +29,8 @@ export const useTerminalStore = create<TerminalStore>((set, get) => ({
     }
 
     const proto = location.protocol === 'https:' ? 'wss:' : 'ws:'
-    const url = `${proto}//${location.host}/ws/terminal/${encodeURIComponent(sessionName)}`
+    const params = cols && rows ? `?cols=${cols}&rows=${rows}` : ''
+    const url = `${proto}//${location.host}/ws/terminal/${encodeURIComponent(sessionName)}${params}`
     const socket = new WebSocket(url)
     ws = socket
 

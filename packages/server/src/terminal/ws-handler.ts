@@ -18,8 +18,11 @@ export function createWsHandler(server: HttpServer): void {
     })
   })
 
-  wss.on('connection', (ws: WebSocket, _req: IncomingMessage, sessionName: string) => {
-    pty.attach(sessionName, ws)
+  wss.on('connection', (ws: WebSocket, req: IncomingMessage, sessionName: string) => {
+    const url = new URL(req.url ?? '', 'http://localhost')
+    const cols = Math.max(1, Number(url.searchParams.get('cols')) || 120)
+    const rows = Math.max(1, Number(url.searchParams.get('rows')) || 30)
+    pty.attach(sessionName, ws, cols, rows)
 
     ws.on('message', (raw, isBinary) => {
       if (isBinary) {

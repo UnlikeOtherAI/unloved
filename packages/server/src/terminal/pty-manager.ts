@@ -26,7 +26,7 @@ function sendJson(ws: WebSocket, msg: object): void {
   ws.send(JSON.stringify(msg))
 }
 
-export function attach(sessionName: string, ws: WebSocket): void {
+export function attach(sessionName: string, ws: WebSocket, initialCols = 120, initialRows = 30): void {
   let entry = entries.get(sessionName)
 
   if (!entry) {
@@ -34,8 +34,8 @@ export function attach(sessionName: string, ws: WebSocket): void {
     try {
       pty = spawn(tmuxBin, ['attach-session', '-t', sessionName], {
         name: 'xterm-256color',
-        cols: 120,
-        rows: 30,
+        cols: initialCols,
+        rows: initialRows,
         cwd: process.env.HOME ?? '/',
         env: { ...process.env } as Record<string, string>,
       })
@@ -73,6 +73,9 @@ export function attach(sessionName: string, ws: WebSocket): void {
     clearTimeout(entry.graceTimer)
     entry.graceTimer = null
   }
+
+  // Resize PTY to match the connecting client's dimensions
+  entry.pty.resize(initialCols, initialRows)
 
   // Send replay buffer to late-joining client
   const replay = entry.buffer.getAll()
