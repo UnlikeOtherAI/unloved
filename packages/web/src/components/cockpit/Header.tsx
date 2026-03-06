@@ -1,9 +1,11 @@
-import { Menu, RotateCw, Hammer } from 'lucide-react'
+import { useState, useEffect, useRef } from 'react'
+import { Menu, Hammer, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useSessionStore } from '../../stores/session'
 import { useLayoutStore } from '../../stores/layout'
 import ViewModeSwitch from './ViewModeSwitch'
 import ViewportSwitch from './ViewportSwitch'
 import SessionMenu from './SessionMenu'
+import UrlBar from './UrlBar'
 
 export default function Header() {
   const activeSessionName = useSessionStore((s) => s.activeSessionName)
@@ -13,17 +15,75 @@ export default function Header() {
   const viewMode = useLayoutStore((s) => s.viewMode)
 
   const meta = activeSessionName ? sessionMetas[activeSessionName] : null
-  const previewUrl = meta?.previewUrl
+  const previewUrl = meta?.previewUrl ?? ''
   const showPreview = viewMode !== 'terminal'
 
-  const handleRefresh = () => {
+  // iframe navigation history tracking
+  const [navPos, setNavPos] = useState(0)
+  const [navLen, setNavLen] = useState(1)
+  const navActionRef = useRef(false)
+  const initialLoadRef = useRef(true)
+
+  useEffect(() => {
+    setNavPos(0)
+    setNavLen(1)
+    initialLoadRef.current = true
+  }, [previewUrl])
+
+  useEffect(() => {
+    if (!previewUrl || !showPreview) return
+
+    let iframe: HTMLIFrameElement | null = null
+    let mounted = true
+
+    const onLoad = () => {
+      if (!mounted) return
+      if (initialLoadRef.current) {
+        initialLoadRef.current = false
+        return
+      }
+      if (navActionRef.current) {
+        navActionRef.current = false
+        return
+      }
+      setNavPos((prev) => {
+        const next = prev + 1
+        setNavLen(next + 1)
+        return next
+      })
+    }
+
+    const timer = setTimeout(() => {
+      iframe = document.querySelector('iframe[title="Preview"]')
+      if (iframe) iframe.addEventListener('load', onLoad)
+    }, 50)
+
+    return () => {
+      mounted = false
+      clearTimeout(timer)
+      if (iframe) iframe.removeEventListener('load', onLoad)
+    }
+  }, [previewUrl, showPreview])
+
+  const canGoBack = navPos > 0
+  const canGoForward = navPos < navLen - 1
+
+  const goBack = () => {
     const iframe = document.querySelector('iframe[title="Preview"]') as HTMLIFrameElement | null
-    if (!iframe) return
-    const current = iframe.src
-    iframe.src = 'about:blank'
-    requestAnimationFrame(() => {
-      iframe.src = current
-    })
+    if (!iframe?.contentWindow || !canGoBack) return
+    navActionRef.current = true
+    setNavPos((p) => p - 1)
+    iframe.contentWindow.history.back()
+    setTimeout(() => { navActionRef.current = false }, 500)
+  }
+
+  const goForward = () => {
+    const iframe = document.querySelector('iframe[title="Preview"]') as HTMLIFrameElement | null
+    if (!iframe?.contentWindow || !canGoForward) return
+    navActionRef.current = true
+    setNavPos((p) => p + 1)
+    iframe.contentWindow.history.forward()
+    setTimeout(() => { navActionRef.current = false }, 500)
   }
 
   return (
@@ -43,35 +103,48 @@ export default function Header() {
             {activeSessionName}
           </span>
 
-          {previewUrl && (
-            <div className="flex h-9 w-[var(--console-width)] max-w-[420px] shrink-0 items-center gap-2 rounded-input border border-divider bg-sidebar px-3 dark:border-divider-dark dark:bg-bg-dark">
-              <span className="flex-1 truncate font-mono text-xs text-text-secondary" data-testid="header-url">
-                {previewUrl}
-              </span>
-              <button
-                type="button"
-                onClick={handleRefresh}
-                className="flex h-6 w-6 shrink-0 cursor-pointer items-center justify-center rounded text-text-secondary transition-colors hover:bg-sidebar-hover dark:hover:bg-divider-dark"
-                aria-label="Refresh preview"
-              >
-                <RotateCw size={13} />
-              </button>
-            </div>
-          )}
-
           <div className="flex-1" />
 
           <ViewModeSwitch />
 
-          <div className="flex-1" />
+          {showPreview && (
+            <div className="hidden items-center gap-1 md:flex">
+              <button
+                type="button"
+                onClick={goBack}
+                disabled={!canGoBack}
+                className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-lg text-text-secondary transition-colors hover:bg-sidebar-hover disabled:cursor-default disabled:opacity-30 dark:hover:bg-divider-dark"
+                aria-label="Go back"
+              >
+                <ChevronLeft size={16} />
+              </button>
+              <button
+                type="button"
+                onClick={goForward}
+                disabled={!canGoForward}
+                className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-lg text-text-secondary transition-colors hover:bg-sidebar-hover disabled:cursor-default disabled:opacity-30 dark:hover:bg-divider-dark"
+                aria-label="Go forward"
+              >
+                <ChevronRight size={16} />
+              </button>
+            </div>
+          )}
 
-          {showPreview && <ViewportSwitch />}
+          {showPreview && activeSessionName && (
+            <UrlBar previewUrl={previewUrl} activeSessionName={activeSessionName} />
+          )}
+
+          {showPreview && (
+            <div className="hidden md:block">
+              <ViewportSwitch />
+            </div>
+          )}
 
           {meta?.restartCommand && (
             <button
               type="button"
               onClick={() => triggerRestart(activeSessionName)}
-              className="flex h-8 shrink-0 cursor-pointer items-center gap-1.5 rounded-button bg-accent px-3 text-xs font-medium text-white transition-colors hover:bg-accent-hover"
+              className="hidden h-8 shrink-0 cursor-pointer items-center gap-1.5 rounded-button bg-accent px-3 text-xs font-medium text-white transition-colors hover:bg-accent-hover md:flex"
               aria-label="Rebuild"
             >
               <Hammer size={14} />

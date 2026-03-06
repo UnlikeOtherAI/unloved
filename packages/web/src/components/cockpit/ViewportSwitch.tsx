@@ -1,5 +1,6 @@
 import { Smartphone, Tablet, Monitor, Maximize } from 'lucide-react'
 import { useLayoutStore, type PreviewViewport } from '../../stores/layout'
+import Tooltip from '../ui/Tooltip'
 
 const viewports: {
   value: PreviewViewport
@@ -27,15 +28,15 @@ export default function ViewportSwitch() {
           type="button"
           onClick={() => setPreviewViewport(value)}
           className={[
-            'flex h-full cursor-pointer items-center gap-1.5 px-2 text-xs transition-colors first:rounded-l-lg last:rounded-r-lg',
+            'group relative flex h-full cursor-pointer items-center gap-1.5 px-2 text-xs transition-colors first:rounded-l-lg last:rounded-r-lg',
             previewViewport === value
               ? 'bg-accent text-white'
               : 'text-text-secondary hover:bg-sidebar-hover dark:hover:bg-divider-dark',
           ].join(' ')}
           aria-label={label}
-          title={label}
         >
           <Icon size={14} style={rotate ? { transform: 'rotate(90deg)' } : undefined} />
+          <Tooltip label={label} />
         </button>
       ))}
     </div>

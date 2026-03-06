@@ -40,7 +40,9 @@ export function useTerminal(
     fit.fit()
     term.focus()
 
-    el.addEventListener('click', () => term.focus())
+    el.addEventListener('click', () => {
+      if (!term.hasSelection()) term.focus()
+    })
 
     termRef.current = term
     fitRef.current = fit

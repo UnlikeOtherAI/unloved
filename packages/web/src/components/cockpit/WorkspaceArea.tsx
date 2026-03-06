@@ -8,7 +8,7 @@ export default function WorkspaceArea() {
 
   if (!activeSessionName) {
     return (
-      <div className="relative flex min-h-0 flex-1 items-center justify-center overflow-hidden">
+      <div className="relative flex min-h-0 flex-1 items-center justify-center overflow-hidden px-11">
         <GradientBackground />
         <WelcomeCard />
       </div>

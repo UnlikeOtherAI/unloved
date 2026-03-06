@@ -2,6 +2,7 @@ import { existsSync } from 'node:fs'
 import { createConnection } from 'node:net'
 import { resolve, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { execFileSync } from 'node:child_process'
 import { startServer } from '@unloved/server'
 import type { ParsedArgs } from '../parse-flags'
 import { ensureHome, writeSessionMeta } from '../home'
@@ -22,12 +23,32 @@ function isPortInUse(port: number): Promise<boolean> {
   })
 }
 
+function isTmuxAvailable(): boolean {
+  try {
+    execFileSync('tmux', ['-V'], { stdio: 'ignore' })
+    return true
+  } catch {
+    return false
+  }
+}
+
 export async function startCommand(args: ParsedArgs): Promise<void> {
   const port = args.flags.port ? Number(args.flags.port) : 6200
   if (!Number.isFinite(port) || port < 1 || port > 65535) {
     console.error('Error: --port must be a number between 1 and 65535')
     process.exit(1)
   }
+
+  if (!isTmuxAvailable()) {
+    console.error('Error: tmux is required but not found in PATH')
+    console.error()
+    console.error('Install it with:')
+    console.error('  macOS:  brew install tmux')
+    console.error('  Ubuntu: sudo apt install tmux')
+    console.error('  Fedora: sudo dnf install tmux')
+    process.exit(1)
+  }
+
   const sessionName = args.positional[0] ?? (await detectTmuxSession()) ?? undefined
   const homeDir = await ensureHome()
 

@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useSyncExternalStore } from 'react'
 import { Group, Panel, Separator, type Layout } from 'react-resizable-panels'
 import { useSessionStore } from '../../stores/session'
 import { useLayoutStore } from '../../stores/layout'
@@ -39,13 +39,22 @@ function VerticalPill() {
   )
 }
 
+const mdQuery = typeof window !== 'undefined' ? window.matchMedia('(min-width: 768px)') : null
+function subscribeToMd(cb: () => void) {
+  mdQuery?.addEventListener('change', cb)
+  return () => mdQuery?.removeEventListener('change', cb)
+}
+function getIsMd() { return mdQuery?.matches ?? true }
+
 interface Props {
   sessionName: string
 }
 
 export default function ResizableWorkspace({ sessionName }: Props) {
   const sessionMetas = useSessionStore((s) => s.sessionMetas)
-  const viewMode = useLayoutStore((s) => s.viewMode)
+  const rawViewMode = useLayoutStore((s) => s.viewMode)
+  const isMd = useSyncExternalStore(subscribeToMd, getIsMd)
+  const viewMode = !isMd && (rawViewMode === 'both' || rawViewMode === 'side-by-side') ? 'terminal' : rawViewMode
   const meta = sessionMetas[sessionName]
   const previewUrl = meta?.previewUrl
 

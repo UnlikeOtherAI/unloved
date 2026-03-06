@@ -40,6 +40,7 @@ export default function PreviewPanel({ sessionName, url }: Props) {
         <p className="text-xs text-text-secondary/60">
           Run <code className="rounded bg-divider px-1.5 py-0.5 font-mono dark:bg-divider-dark">unloved {sessionName} url &lt;url&gt;</code> to set one
         </p>
+        <p className="text-xs text-text-secondary/40">or</p>
         <form onSubmit={handleSubmit} className="flex w-72 gap-2">
           <input
             type="url"

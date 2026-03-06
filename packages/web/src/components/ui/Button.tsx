@@ -9,7 +9,7 @@ const VARIANT_CLASSES: Record<NonNullable<ButtonProps['variant']>, string> = {
   primary: 'bg-accent text-white hover:bg-accent-hover',
   secondary:
     'bg-[#E5E7EB] text-text-primary hover:bg-[#D1D5DB] dark:bg-divider-dark dark:text-text-dark dark:hover:bg-divider-dark',
-  ghost: 'bg-transparent hover:bg-sidebar-hover dark:hover:bg-divider-dark',
+  ghost: 'bg-transparent text-text-secondary hover:bg-sidebar-hover dark:text-text-dark dark:hover:bg-divider-dark',
 }
 
 const BASE_CLASSES =

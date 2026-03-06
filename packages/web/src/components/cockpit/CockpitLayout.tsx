@@ -1,3 +1,4 @@
+import { X } from 'lucide-react'
 import { useLayoutStore } from '../../stores/layout'
 import Sidebar from './Sidebar'
 import MainArea from './MainArea'
@@ -16,20 +17,37 @@ export default function CockpitLayout() {
         <Sidebar />
       </div>
 
-      {/* Mobile: overlay sidebar with blur backdrop */}
-      {sidebarOpen && (
-        <div className="fixed inset-0 z-40 flex md:hidden">
-          <div className="h-full w-[var(--sidebar-width)] shrink-0">
-            <Sidebar />
-          </div>
-          <button
-            type="button"
-            className="flex-1 cursor-default bg-black/40 backdrop-blur-sm"
-            onClick={closeSidebar}
-            aria-label="Close sidebar"
-          />
-        </div>
-      )}
+      {/* Mobile: full-screen backdrop (behind sidebar) */}
+      <button
+        type="button"
+        className={[
+          'fixed inset-0 z-40 cursor-default bg-black/20 backdrop-blur-[2px] transition-opacity duration-300 ease-in-out md:hidden',
+          sidebarOpen
+            ? 'visible opacity-100'
+            : 'invisible opacity-0',
+        ].join(' ')}
+        onClick={closeSidebar}
+        aria-label="Close sidebar"
+      />
+
+      {/* Mobile: sliding sidebar panel */}
+      <div
+        className={[
+          'fixed inset-y-0 left-0 z-50 transition-transform duration-300 ease-in-out md:hidden',
+          sidebarOpen ? 'translate-x-0' : '-translate-x-full',
+        ].join(' ')}
+        style={{ width: 'var(--sidebar-width)' }}
+      >
+        <Sidebar />
+        <button
+          type="button"
+          onClick={closeSidebar}
+          className="absolute right-2 top-3.5 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full text-text-secondary transition-colors hover:bg-sidebar-hover dark:hover:bg-divider-dark"
+          aria-label="Close sidebar"
+        >
+          <X size={15} />
+        </button>
+      </div>
 
       <MainArea />
     </div>
