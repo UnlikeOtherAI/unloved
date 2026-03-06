@@ -8,7 +8,7 @@ const app: Express = express()
 
 app.use(
   cors({
-    origin: 'http://localhost:5173',
+    origin: (_origin, callback) => callback(null, true),
   }),
 )
 app.use(express.json())

@@ -30,9 +30,14 @@ export const useThemeStore = create<ThemeStore>((set, get) => ({
     get().setMode(nextMode)
   },
   hydrate: async () => {
-    const response = await fetch('/api/config')
-    const config: AppConfig = await response.json()
-    set({ mode: config.theme })
-    applyThemeClass(config.theme)
+    try {
+      const response = await fetch('/api/config')
+      if (!response.ok) return
+      const config: AppConfig = await response.json()
+      set({ mode: config.theme })
+      applyThemeClass(config.theme)
+    } catch {
+      // Server unreachable, keep default theme
+    }
   },
 }))

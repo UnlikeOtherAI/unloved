@@ -21,8 +21,13 @@ export const useSessionStore = create<SessionStore>((set) => ({
   setSessionName: (sessionName) => set({ sessionName }),
   setSelectedSession: (selectedSession) => set({ selectedSession }),
   fetchSessions: async () => {
-    const response = await fetch('/api/tmux/sessions')
-    const sessions: TmuxSession[] = await response.json()
-    set({ existingSessions: sessions })
+    try {
+      const response = await fetch('/api/tmux/sessions')
+      if (!response.ok) return
+      const sessions: TmuxSession[] = await response.json()
+      set({ existingSessions: sessions })
+    } catch {
+      // Server unreachable, keep empty sessions
+    }
   },
 }))

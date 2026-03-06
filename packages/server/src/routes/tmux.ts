@@ -32,9 +32,9 @@ tmuxRouter.get('/sessions', async (_request, response) => {
 
     response.json(sessions)
   } catch (error) {
-    const tmuxError = error as NodeJS.ErrnoException & { code?: number }
+    const tmuxError = error as NodeJS.ErrnoException & { status?: number }
 
-    if (tmuxError.code === 'ENOENT' || tmuxError.code === 1) {
+    if (tmuxError.code === 'ENOENT' || tmuxError.status === 1) {
       response.json([])
       return
     }
