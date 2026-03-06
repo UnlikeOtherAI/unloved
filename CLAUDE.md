@@ -1,32 +1,12 @@
 # unloved
 
-Local multi-device AI coding cockpit. See `docs/brief.md` for full context.
+All instructions, standards, architecture rules, and release processes live in **[AGENTS.md](./AGENTS.md)** — the absolute source of truth for this project. Read it before doing anything.
 
-## Standards
+## Quick Reference
 
-All coding standards, architecture rules, and agent guidelines: `@./AGENTS.md`
-
-## Tech Stack
-
-- **Monorepo:** pnpm workspaces, TypeScript (ES2022, strict, bundler resolution)
-- **Server:** Express, Node.js >=20
-- **Web:** React 19, Vite, Tailwind v4, Zustand, lucide-react
-- **Shared:** Pure types, no runtime deps
-- **Build:** tsup (server/shared), Vite (web)
-
-## Key Commands
-
-```sh
-pnpm dev          # run all packages in parallel
-pnpm build        # build all packages
-steroids llm      # steroids CLI reference
-```
-
-## Specs
-
-Implementation specs live in `specs/`. Each steroids task references its spec file.
-
-## Ports
-
-- Server: 6200
-- Web dev: 6201
+- **Package manager:** pnpm
+- **Build:** `pnpm build`
+- **Dev:** `pnpm dev`
+- **Server port:** 6200
+- **Web dev port:** 6201
+- **E2E tests:** `cd packages/web && pnpm exec playwright test`

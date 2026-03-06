@@ -1,5 +1,7 @@
 @import "tailwindcss";
 @import "@fontsource/inter/latin.css";
+@import "@fontsource/jetbrains-mono/latin.css";
+@import "@xterm/xterm/css/xterm.css";
 
 @custom-variant dark (&:where(.dark, .dark *));
 

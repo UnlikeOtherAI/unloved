@@ -3,9 +3,16 @@
   "private": true,
   "scripts": {
     "dev": "pnpm -r --parallel dev",
-    "build": "pnpm -r build"
+    "build": "pnpm --filter @unloved/server build && pnpm --filter @unloved/web build && pnpm --filter unloved build",
+    "postinstall": "node scripts/fix-pty-perms.js"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "node-pty"
+    ]
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
     "typescript": "^5.7"
   }
 }

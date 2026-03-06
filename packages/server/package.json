@@ -1,20 +1,24 @@
 {
   "name": "@unloved/server",
+  "version": "0.1.0",
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "UNLOVED_ROOT=../.. tsx --watch src/index.ts",
+    "dev": "tsx --watch src/dev.ts",
     "build": "tsup src/index.ts --format esm --dts"
   },
   "dependencies": {
     "@unloved/shared": "workspace:*",
     "cors": "^2.8.5",
     "express": "^5.1.0",
+    "node-pty": "^1.0.0",
+    "ws": "^8.18.0",
     "zod": "^4.1.5"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
+    "@types/ws": "^8.5.14",
     "tsup": "^8.5.0",
     "tsx": "^4.20.5"
   }

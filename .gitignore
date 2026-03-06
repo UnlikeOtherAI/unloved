@@ -3,3 +3,8 @@ dist/
 *.tsbuildinfo
 .env
 unloved.config.json
+packages/cli/public/
+.steroids/
+.playwright-mcp/
+test-results/
+*.png

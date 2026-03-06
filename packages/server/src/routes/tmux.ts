@@ -43,4 +43,25 @@ tmuxRouter.get('/sessions', async (_request, response) => {
   }
 })
 
+tmuxRouter.post('/sessions', async (request, response) => {
+  const { name } = request.body as { name?: string }
+
+  if (!name || !name.trim()) {
+    response.status(400).json({ error: 'Session name is required' })
+    return
+  }
+
+  try {
+    await execFileAsync('tmux', ['new-session', '-d', '-s', name.trim()])
+    response.json({ name: name.trim(), created: true })
+  } catch (error) {
+    const tmuxError = error as NodeJS.ErrnoException
+    if (tmuxError.code === 'ENOENT') {
+      response.status(400).json({ error: 'tmux is not installed' })
+      return
+    }
+    response.status(500).json({ error: 'Failed to create tmux session' })
+  }
+})
+
 export default tmuxRouter

@@ -14,14 +14,14 @@ export default function ThemeToggle({ className }: ThemeToggleProps) {
       type="button"
       onClick={toggle}
       className={[
-        'fixed top-4 right-4 z-50 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-card text-text-primary shadow-subtle transition-colors duration-150 dark:bg-card-dark dark:text-text-dark',
+        'flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-text-primary transition-colors duration-150 hover:bg-sidebar-hover dark:text-text-dark dark:hover:bg-divider-dark',
         className,
       ]
         .filter(Boolean)
         .join(' ')}
       aria-label="Toggle theme"
     >
-      {mode === 'dark' ? <Moon size={20} strokeWidth={1.8} /> : <Sun size={20} strokeWidth={1.8} />}
+      {mode === 'dark' ? <Moon size={18} strokeWidth={1.8} /> : <Sun size={18} strokeWidth={1.8} />}
     </button>
   )
 }

@@ -41,10 +41,12 @@ Standards for all LLM agents (coders, reviewers, coordinators) working on this p
 @unloved/shared  → Pure types, no runtime deps, no side effects
 @unloved/server  → Express backend, depends only on shared
 @unloved/web     → React frontend, depends only on shared
+unloved (cli)    → CLI entry point, bundles server + serves web static assets
 ```
 
 - shared is a leaf package. Never add runtime dependencies to it.
 - Server and web never import from each other.
+- CLI imports from server (bundled via tsup `noExternal`).
 - All cross-package contracts go through shared types.
 
 ### File Organization
@@ -126,8 +128,82 @@ Standards for all LLM agents (coders, reviewers, coordinators) working on this p
 | `pnpm-workspace.yaml` | Monorepo workspace declaration |
 | `tsconfig.base.json` | Shared TypeScript compiler options |
 | `packages/shared/src/` | All cross-package types |
-| `packages/server/src/app.ts` | Express app setup |
+| `packages/server/src/app.ts` | Express app factory (`createApp`) |
+| `packages/server/src/index.ts` | Server startup (`startServer`) |
+| `packages/cli/src/index.ts` | CLI entry point and command dispatch |
+| `packages/cli/src/commands/` | CLI command implementations |
 | `packages/web/src/index.css` | All Tailwind v4 design tokens |
 | `packages/web/src/App.tsx` | React app root |
 | `docs/` | Project documentation (read-only reference) |
 | `specs/` | Task specifications for steroids |
+
+---
+
+## Release Process
+
+Every release follows these steps exactly. Do not skip or reorder.
+
+### 1. Commit
+
+Stage all changes and commit with a descriptive message:
+
+```sh
+git add -A
+git commit -m "feat: <summary of changes>"
+```
+
+### 2. Push
+
+Push the branch to origin:
+
+```sh
+git push origin main
+```
+
+### 3. Bump version
+
+Bump the version in `packages/cli/package.json`. Use semver:
+- **patch** (0.1.0 → 0.1.1): bug fixes, minor tweaks
+- **minor** (0.1.0 → 0.2.0): new features, non-breaking changes
+- **major** (0.1.0 → 1.0.0): breaking changes
+
+### 4. Build
+
+```sh
+pnpm build
+```
+
+This builds server → web → cli in order. The CLI prebuild copies the web dist into `packages/cli/public/`.
+
+### 5. Publish to npm
+
+```sh
+cd packages/cli && npm publish
+```
+
+If publishing a pre-1.0 version for the first time, use `npm publish --access public`.
+
+### 6. Create GitHub release
+
+Tag and create a full release with description:
+
+```sh
+VERSION=$(node -p "require('./packages/cli/package.json').version")
+git tag "v${VERSION}"
+git push origin "v${VERSION}"
+gh release create "v${VERSION}" \
+  --title "v${VERSION}" \
+  --generate-notes
+```
+
+Use `--generate-notes` to auto-generate release notes from commits since last tag. Add a manual `--notes` section if the auto-generated notes are insufficient.
+
+### 7. Install and verify
+
+```sh
+npm i -g unloved@latest
+unloved version
+```
+
+Confirm the printed version matches the version you just published.
+6. `unloved start test-session` (verify web UI loads from installed package)

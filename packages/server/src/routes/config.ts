@@ -5,15 +5,16 @@ import { DEFAULT_CONFIG, type AppConfig } from '@unloved/shared'
 import { z } from 'zod'
 
 const configRouter: ExpressRouter = Router()
-const configPath = resolve(process.env.UNLOVED_ROOT ?? process.cwd(), 'unloved.config.json')
+
+const getConfigPath = (homeDir: string) => resolve(homeDir, 'config.json')
 
 const patchSchema = z.object({
   theme: z.enum(['light', 'dark']).optional(),
 })
 
-const readConfig = async (): Promise<AppConfig> => {
+const readConfig = async (homeDir: string): Promise<AppConfig> => {
   try {
-    const content = await readFile(configPath, 'utf-8')
+    const content = await readFile(getConfigPath(homeDir), 'utf-8')
     return { ...DEFAULT_CONFIG, ...(JSON.parse(content) as Partial<AppConfig>) }
   } catch (error) {
     const fileError = error as NodeJS.ErrnoException
@@ -26,9 +27,9 @@ const readConfig = async (): Promise<AppConfig> => {
   }
 }
 
-configRouter.get('/', async (_request, response) => {
+configRouter.get('/', async (request, response) => {
   try {
-    const config = await readConfig()
+    const config = await readConfig(request.app.locals.homeDir)
     response.json(config)
   } catch {
     response.status(500).json({ error: 'Failed to read config' })
@@ -44,9 +45,10 @@ configRouter.patch('/', async (request, response) => {
   }
 
   try {
-    const config = await readConfig()
+    const homeDir = request.app.locals.homeDir
+    const config = await readConfig(homeDir)
     const updatedConfig = { ...config, ...parsedBody.data }
-    await writeFile(configPath, `${JSON.stringify(updatedConfig, null, 2)}\n`, 'utf-8')
+    await writeFile(getConfigPath(homeDir), `${JSON.stringify(updatedConfig, null, 2)}\n`, 'utf-8')
 
     response.json(updatedConfig)
   } catch {
