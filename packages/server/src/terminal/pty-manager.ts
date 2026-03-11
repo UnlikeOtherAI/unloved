@@ -1,4 +1,7 @@
+import { chmodSync, statSync } from 'node:fs'
 import { execFileSync } from 'node:child_process'
+import { createRequire } from 'node:module'
+import { dirname, join } from 'node:path'
 import type { IPty } from 'node-pty'
 import { spawn } from 'node-pty'
 import type { WebSocket } from 'ws'
@@ -10,6 +13,17 @@ try {
   tmuxBin = execFileSync('which', ['tmux'], { encoding: 'utf-8' }).trim()
 } catch {
   // Fall through, use bare name
+}
+
+// npm strips execute bits from prebuilt binaries — fix node-pty's spawn-helper
+try {
+  const req = createRequire(import.meta.url)
+  const ptyPkgRoot = dirname(dirname(req.resolve('node-pty')))
+  const helper = join(ptyPkgRoot, 'prebuilds', `${process.platform}-${process.arch}`, 'spawn-helper')
+  const st = statSync(helper)
+  if (!(st.mode & 0o111)) chmodSync(helper, st.mode | 0o755)
+} catch {
+  // Best-effort: spawn-helper might not exist on this platform or layout
 }
 
 interface PtyEntry {
