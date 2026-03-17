@@ -1,6 +1,6 @@
 {
   "name": "@unlikeotherai/unloved",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "Local multi-device AI coding cockpit",
   "type": "module",
   "bin": {
