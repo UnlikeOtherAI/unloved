@@ -4,13 +4,22 @@ Local multi-device AI coding cockpit for CLI-based LLMs.
 
 `unloved` wraps AI coding CLIs (Claude Code, Codex, Gemini CLI, OpenCode) and exposes them through a web-based terminal UI with a live preview pane — accessible from any device on your local network.
 
-## Prerequisites
+## Install
+
+```sh
+npm install -g @unlikeotherai/unloved
+unloved start
+```
+
+Open http://localhost:6200 in your browser.
+
+## Prerequisites (development)
 
 - **Node.js** >= 20
 - **pnpm** >= 10 (`npm install -g pnpm`)
 - **tmux** (optional — for session management)
 
-## Quick Start
+## Quick Start (development)
 
 ```sh
 git clone git@github.com:UnlikeOtherAI/unloved.git
