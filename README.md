@@ -13,6 +13,8 @@ unloved start
 
 Open http://localhost:6200 in your browser.
 
+> **Permission error?** If you get `EACCES: permission denied`, your Node.js is installed system-wide. Either prefix with `sudo`, or (recommended) switch to [nvm](https://github.com/nvm-sh/nvm) or [volta](https://volta.sh) so global installs don't require root.
+
 ## Prerequisites (development)
 
 - **Node.js** >= 20
