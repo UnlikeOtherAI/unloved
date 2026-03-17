@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "pnpm -r --parallel dev",
     "build": "pnpm --filter @unloved/server build && pnpm --filter @unloved/web build && pnpm --filter unloved build",
-    "postinstall": "node scripts/fix-pty-perms.js"
+    "postinstall": "node \"$(dirname $npm_package_json)/scripts/fix-pty-perms.js\""
   },
   "pnpm": {
     "onlyBuiltDependencies": [
