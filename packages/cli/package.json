@@ -1,6 +1,6 @@
 {
   "name": "@unlikeotherai/unloved",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "description": "Local multi-device AI coding cockpit",
   "type": "module",
   "bin": {
@@ -12,7 +12,7 @@
     "scripts"
   ],
   "scripts": {
-    "postinstall": "node \"$(dirname $npm_package_json)/scripts/fix-pty-perms.js\"",
+    "postinstall": "node \"$(dirname $npm_package_json)/scripts/fix-pty-perms.cjs\"",
     "prebuild": "pnpm --filter @unloved/web build && rm -rf public && cp -r ../web/dist public",
     "build": "tsup",
     "dev": "tsup --watch"
